@@ -7,6 +7,7 @@ format:
     transition: fade
     background-transition: fade
     highlight-style: tango
+    footer: ivelasq-shinyconf2025.share.connect.posit.cloud
 editor: source
 ---
 
