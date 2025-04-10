@@ -1,0 +1,654 @@
+---
+format:
+  revealjs: 
+    theme: [default, custom.scss]
+    filters:
+      - fontawesome
+    transition: fade
+    background-transition: fade
+    highlight-style: tango
+editor: source
+---
+
+##  {.title background-image="images/title.png" background-color="#1f433c"}
+
+::: r-fit-text
+Choosing the right tool for interactive dashboards
+:::
+
+::: {style="font-size: 60px; text-align:center; color: white;"}
+flexdashboard, Quarto, and Shiny
+:::
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+::: {style="font-size: 40px; text-align:right; color: white;"}
+Isabella Velásquez
+
+ShinyConf 2025
+:::
+
+## Introduction
+
+<center>
+
+<img src="images/profile.jpg" style="border-radius: 50%;" width="250px"/>
+
+[{{< fa brands github >}} \@ivelasq](https://github.com/ivelasq)
+
+[{{< fa brands twitter >}} \@ivelasq3](https://twitter.com/ivelasq3)
+
+[{{< fa brands mastodon >}} \@ivelasq3](https://fosstodon.org/@ivelasq3)
+
+[{{< fa link >}} ivelasq.rbind.io](https://ivelasq.rbind.io)
+
+</center>
+
+::: notes
+Hi everyone, thanks for joining me today. I’m Isabella Velásquez, and I work at Posit, formerly RStudio, where I get to learn about and share the great tools we're building for data science and communication.
+:::
+
+## Motivation
+
+![](images/motivation.jpg){fig-align="center"}
+
+::: notes
+In my previous role as a data analyst, I spent a lot of time thinking about how to choose the right tool when creating a dashboard. Why choose this tool over another? How can I make sure I don’t get halfway through a project only to realize I can’t share it the way I want?
+:::
+
+## Motivation {background-image="images/motivation.png"}
+
+::: notes
+
+And over the years, as our options grow, I know many people continue asking the same questions. Today, let's think of picking a dashboarding tool like setting out on a train journey. There are many possible routes, and each stop offers something a little different. Some routes are direct, but most are windy and intersect pretty often. My goal today is to help you find the path that works best for your data, your audience, and the kind of experience you want to create.
+
+:::
+
+## Planning your trip
+
+* What’s the purpose of this journey? (Purpose: KPIs, trends)
+* Who's coming with you? (Audience: execs, public, analysts?)
+* How often will this trip happen? (Once? Daily?)
+* What do you need to bring? (Data sources, interactivity, servers, customization)
+* Are you on an exploratory (self-serve) or explanatory (guided) route?
+    
+::: notes
+Just like you’d ask a few key questions before planning a trip, it’s important to pause and do the same before starting any dashboarding project, no matter which tool you choose. Ask yourself: What’s the purpose of this journey? Who’s going to use the dashboard? How often will they use it? What needs to be in place for it to succeed? And is it meant to explore data or explain it? These answers will help guide your route and make sure you don’t get lost along the way.
+:::
+
+# All aboard! {background-image="images/transition.png"}
+
+::: notes
+Once you have answered your questions, you can proceed with choosing your tool. There are many ways to get to your destination, but your journey depends on your needs and resources. Picking the wrong tool is like boarding the wrong train, you might still get there, but it’ll be slower, bumpier, or more expensive than expected. Choosing the right track helps avoid detours, delays, and breakdowns, or in less metaphoric terms, it saves time and frustration, matches the right tool to your use case, ensures maintenence and performance, and avoids over or under engineering.
+:::
+
+## Today's dashboard options
+
+:::: {.columns}
+
+::: {.column width="30%"}
+![](images/flexdashboard.png)
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="30%"}
+![](images/quarto.png)
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="30%"}
+![](images/shiny.png)
+:::
+
+::::
+
+::: notes
+Today, we'll look at three possible routes for R and Python users: flexdashboard, Quarto, and Shiny, and how to choose between them. Let's quickly cover each one.
+:::
+    
+## flexdashboard {.smaller}
+
+* “Make it easy to create interactive dashboards for R using R Markdown”
+
+::: notes
+flexdashboard is a lightweight R package that lets you turn R Markdown documents into interactive dashboards with just a few lines of code.
+:::
+
+. . .
+
+* Allows for easy organization with R Markdown's dashboard layout options
+* Lightweight, static dashboards with optional Shiny interactivity
+* Deployment in HTML file or Shiny Server
+
+::: notes
+You can include plots, tables, and text, and arrange them in columns or rows. It’s great for quick reporting and sharing results because it’s easy to set up and doesn't require a Shiny server. If you do need reactivity, you can add Shiny later but you don’t have to start there.
+:::
+
+. . .
+
+* R package (requires R)
+* Markdown-based (uses document-centric format)
+
+::: notes
+Note though, that it is an R package and therefore requires R. It's also Markdown based, so some knowledge of Markdown is required.
+:::
+
+## Quarto dashboard {.smaller}
+
+* Released in Quarto 1.4
+* Successor to flexdashboard with modern enhancements
+
+::: notes
+Released in version 1.4, Quarto dashboards are a flexible and modern way to build dashboards using Quarto, an open-source publishing system for data science. Like flexdashboard, you can combine code, text, and visuals in a clean, customizable layout using Markdown. You can create static dashboards or make them interactive with Shiny. Quarto is often called the next generation of R Markdown. While R Markdown and tools like flexdashboard aren’t going away, new features and updates are focused on Quarto. So if you're interested in the latest and greatest, it's worth considering the switch.
+:::
+
+. . .
+
+* Integrates many of the features that are in separate packages to R Markdown into Quarto
+
+::: notes
+One big difference is that Quarto’s features are consistent across formats. In the R Markdown ecosystem, tools like bookdown, flexdashboard, and xaringan each had their own way of doing things. Quarto unifies this with shared syntax and structure, whether you're making a dashboard, a book, or a slide deck.
+:::
+
+. . .
+
+* Supports multiple languages natively (R, Python, Julia, Observable)
+
+* Command-line tool (CLI)
+* Markdown-based (uses document-centric format)
+
+::: notes
+Another bonus: Quarto works natively with R and Python, you don’t need to install R to use it with Python. In fact, because Quarto is a command line tool, you can use it without installing any programming language at all. Like flexdashboard, it uses Markdown to lay out your dashboard's rows and columns, which you then populate with tables, plots, or text.
+:::
+
+## Shiny {.smaller}
+
+* Fully interactive, reactive framework for web applications
+* Supports user input, dynamic filtering, and real-time updates
+
+::: notes
+Shiny is a framework that lets you build interactive web applications using R or Python. You can use Shiny on its own or inside formats like flexdashboard and Quarto. Unlike static dashboards, Shiny apps respond to user input, like filters, sliders, and buttons, making them ideal when your audience needs to explore the data in real time or when you want a more dynamic and customized experience.
+:::
+
+. . .
+
+* R or Python based, HTML/JavaScript/CSS optional
+
+::: notes
+While Shiny does require more setup and code than static options, it gives you a lot of flexibility without needing to know HTML, CSS, or JavaScript. You can build full-featured web apps using just R with Shiny for R or Python with Shiny for Python.
+:::
+
+. . .
+
+* Traditional Shiny requires a server for deployment
+* Shinylive allows for serverless apps (i.e., run entirely in the browser)
+
+::: notes
+Traditionally, Shiny apps required a server to run, either in the cloud such as with shinyapps.io or on-premises with tools like Posit Connect. But now, with the release of Shinylive, you can run Shiny apps directly in the browser. That means someone can open an HTML webpage and start using your app, no server needed. 
+:::
+
+## Your dashboard options (expanded) {.smaller}
+
+:::: {.columns}
+
+::: {.column width="30%"}
+![](images/flexdashboard.png){width=60% fig-align="center"}
+
+* flexdashboard (No Shiny): Simple, static dashboards in R Markdown
+* flexdashboard (With Shiny): Reactive dashboards with basic Shiny support
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="30%"}
+![](images/quarto.png){width=60% fig-align="center"}
+
+* Quarto Dashboard (No Shiny): Static dashboards in Quarto format
+* Quarto Dashboard (With Shiny): Reactive dashboards with basic Shiny support
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="30%"}
+![](images/shiny.png){width=60% fig-align="center"}
+
+* Traditional Shiny: Full R or Python-based web applications
+* Shinylive: Run Shiny apps in the browser, no server needed
+:::
+
+::::
+
+::: notes
+I mentioned that we'd be discussing three dashboarding tools, but within each of them, there are different routes to take. The right path depends on the answers to those key planning questions you considered earlier, like the purpose of your dashboard, who will use it, and how interactive or dynamic it needs to be, and the resources at your disposal.
+:::
+
+# Which track to take? {background-image="images/transition.png"}
+
+:::notes
+Now that we've laid out the different tools, let's talk about how to make the best choice. Think of these heuristics as the guiding principles for selecting the best dashboarding tool for your project. By answering the key questions we discussed earlier, you can focus on the most important factors.
+:::
+
+## The reactivity route
+
+![](images/reactivity.gif){fig-align="center"}
+
+::: notes
+Reactivity refers to the ability of a dashboard to update its content in response to user input, like filtering data or interacting with a plot. Shiny is known for offering full reactivity, meaning that user actions such as changing a filter or adjusting a slider can modify data or regenerate plots in real time. In contrast, flexdashboard and Quarto dashboards (without runtime: shiny) are static, meaning they only displays pre-generated data and plots. They can provide some interactivity like zooming in on a plot with Plotly, but this interactivity doesn't involve rerunning the code in the backend. Any feature where data or plots are dynamically updated require reactivity. This is where Shiny comes in. Whether it's a traditional Shiny app, a Shiny-powered flexdashboard or Quarto dashboard, or Shinylive, you can incorporate reactivity to process the data.
+
+When choosing between the options laid out earlier, one of the biggest factors is whether your dashboard needs to be reactive to meet your purpose and your audience's needs. If you want to let users explore data and gain insights through user input, you’re on the reactive path.
+:::
+
+## Some routes are automatic
+
+![](images/reactivity-line.png){fig-align="center"}
+
+::: notes
+Based on my research, reactivity requires answering key questions that will guide you along your dashboarding journey, each building upon the previous one. Answering "yes" to one of them will move you along a specific track. So, do you need reactivity (user-driven updates)? If yes, you’ll be on the Shiny line. That is, flexdashboard and Quarto without Shiny are no longer options. Reactivity is the starting point for dynamic, user-interactive dashboards. Next, given that you need reactivity, do you need advanced Shiny features (like Shinywidgets, ability to access a session object, etc.)? If yes, stay on the Shiny line and consider either Traditional Shiny or Shinylive. If no, all four of these options are still available. Do you lack the option to deploy to a server? If yes, you’re on the serverless track with Shinylive, where Shiny apps can run in the browser without needing a server. However, if you don’t need advanced Shiny features or you have server access, you’re not automatically pushed to the next track. For example, if you need reactivity but don’t require advanced Shiny features, you can still opt for Flexdashboard or Quarto dashboards with Shiny. Similarly, if you need reactivity and have access to a server, then you can go with any four of the options, depending on your requirements.
+:::
+
+## And sometimes, you choose your route
+
+Thinking back on the planning questions from before, determine:
+
+* How big is your data?
+* Can your data be hosted online?
+* How much interactivity is really needed?
+* Is this for long-term use or a one-time project?
+
+::: notes
+If you answered no to any of the reactivity questions, there are some less clear-cut considerations you need to evaluate. These questions can play a big role in narrowing down your options, but they don’t necessarily have a clear path to a particular tool. You’ll need to think through each of these carefully.
+:::
+
+## Mind the gap
+
+Even if a track looks right, proceed with caution!
+
+![](images/gap.jpg){fig-align="center" fig-width=80%}
+
+::: notes
+Sometimes your needs seem to point straight to a tool. For example, you want reactivity but don’t have a server? Shinylive sounds perfect. But just like hopping on the express train, it’s worth double-checking the stops. Just because you can build a dashboard with a tool doesn’t mean you should. Shinylive runs entirely in the browser, which is amazing, but there are tradeoffs. You’re limited by file size, can’t store sensitive information, and heavier processing becomes tricky. Likewise, if your data is protected, say, under HIPAA, you might consider hosting a Shiny app on a cloud platform like shinyapps.io. Technically, it works. But that means your data lives on someone else’s servers, which may not meet your org’s security or compliance standards. So even when a tool seems to check all the technical boxes, pause and ask:  Will this choice actually get me where I need to go, safely and responsibly?
+:::
+
+## Considering your options {.smaller}
+
+:::: {.columns}
+
+::: {.column width="30%"}
+![](images/flexdashboard.png){width=60% fig-align="center"}
+
+* flexdashboard (No Shiny): Simple, static dashboards in R Markdown
+* flexdashboard (With Shiny): Reactive dashboards with basic Shiny support
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="30%"}
+![](images/quarto.png){width=60% fig-align="center"}
+
+* Quarto Dashboard (No Shiny): Static dashboards in Quarto format
+* Quarto Dashboard (With Shiny): Reactive dashboards with basic Shiny support
+:::
+
+::: {.column width="5%"}
+:::
+
+::: {.column width="30%"}
+![](images/shiny.png){width=60% fig-align="center"}
+
+* Traditional Shiny: Full R or Python-based web applications
+* Shinylive: Run Shiny apps in the browser, no server needed
+:::
+
+::::
+
+::: notes
+Now that we’ve looked at the reactivity route, let’s return to the dashboarding tools. I’ll walk through what makes each option a good or not-so-good fit. Based on your answers, you’ll decide which path best fits your project.
+:::
+
+## Is Flexdashboard (No Shiny) Right for You? {.smaller}
+
+::::{.columns}
+
+::: {.column}
+✅ Good Option If...
+
+* You prefer R Markdown’s simple document format.
+* You want a static dashboard with no server needed.
+* Your dashboard shows key metrics, no deep filters.
+* Interactivity like tooltips or plot zoom is enough.
+* You like quick setup with familiar syntax.
+
+:::
+
+::: {.column}
+
+🚫 Avoid If...
+
+* You need real-time filtering or dynamic content.
+* Your users need to upload or download data.
+* You require Shiny widgets or reactive elements.
+* Your data is too large to precompute.
+
+:::
+::::
+
+::: notes
+So let’s talk about Flexdashboard without Shiny. This is probably one of the simplest stops on our dashboarding journey. It’s a great choice if you want something quick, clean, and easy to deploy. You’re working with R Markdown, you want to share key metrics in a standalone HTML file, and you don’t need complex interactivity, maybe just some tooltips or hover effects with something like Plotly. But it’s not the right stop if your dashboard needs dynamic updates based on user input. So if your project is lightweight, clear, and doesn’t need a server, Flexdashboard without Shiny might be just the ticket.
+:::
+
+## Is Flexdashboard (With Shiny) Right for You? {.smaller}
+
+::::{.columns}
+
+::: {.column}
+
+✅ Good Option If...
+
+* You like flexdashboard’s layout but need interactivity.
+* Your dashboard needs basic filtering, dropdowns, or reactive elements.
+* You want to avoid building a full Shiny app but still use reactive components.
+* You can host it on a Shiny server like Posit Connect.
+
+:::
+
+::: {.column}
+
+🚫 Avoid If...
+
+* You need a fully custom UI. Shiny offers more flexibility.
+* Your dashboard handles complex user workflows or multi-page interactions.
+* You need full Shiny functionality (Shinywidgets, etc.).
+* You want a modern, multi-language-friendly or Python-native approach.
+
+:::
+::::
+
+::: notes
+Next stop: Flexdashboard with Shiny, this option blends the simple layout of flexdashboard with the power of Shiny’s interactivity. It’s perfect if you like the clean, column-based format but want to add filters, dropdowns, or other reactive elements. Maybe your audience wants to slice the data a few different ways, but you don’t need to build a full Shiny app from scratch. This is a great in-between option, less overhead than traditional Shiny, but more dynamic than a static dashboard. Of course, it does mean you’ll need a Shiny server like Posit Connect to host it.
+:::
+
+## Is Quarto (No Shiny) Right for You? {.smaller}
+
+::::{.columns}
+
+::: {.column}
+
+✅ Good Option If...
+
+* You want to use Quarto’s modern, document-focused format.
+* You work in R, Python, Observable, or Julia (multi-language support).
+* You need a static dashboard deployed as an HTML file.
+* You want a quick way to build dashboards using Markdown-like syntax.
+* You only need light interactivity, like tooltips or zooming.
+* You want full Quarto features like cross-format consistency and extensions.
+
+:::
+
+::: {.column}
+
+🚫 Avoid If...
+
+* You need reactivity, like filters or user inputs.
+* Your dashboard must handle uploads or query large datasets dynamically.
+* You need highly customized layouts or UI logic.
+
+:::
+::::
+
+::: notes
+Let’s talk about Quarto dashboards without Shiny, these are a great choice if you’re working with static data and don’t need reactivity. Quarto is flexible and supports multiple languages like R, Python, Observable, and Julia. If you just need to present key numbers, a few plots, and some written context, this is a fast, modern way to do it. Quarto without Shiny can do light interactions, like hover tooltips or zooming, but it won’t rerun code in response to user input. So, use this when simplicity and clarity are the goal.
+:::
+
+## Is Quarto (With Shiny) Right for You? {.smaller}
+
+::::{.columns}
+
+::: {.column}
+
+✅ Good Option If...
+
+* You want reactivity in a modern, markdown-based format.
+* You work in R or Python and want flexibility across languages.
+* You plan to include charts, filters, and user inputs.
+* You're deploying to Posit Connect, shinyapps.io, or another server.
+* You like the idea of using one tool for different formats (docs, dashboards, slides, etc.).
+:::
+
+
+::: {.column}
+🚫 Avoid If...
+
+* Your users must upload files or trigger complex workflows.
+* You want to host the dashboard without a server.
+* You're unfamiliar with Quarto and need something quicker to prototype.
+:::
+
+::::
+
+::: notes
+Now let’s talk about Quarto dashboards with Shiny. If you want to stay in a modern, markdown-friendly world and add Shiny’s reactivity, this is a great route. You can use either R or Python, and you’ll still get a clean layout with support for filters, inputs, and dynamic outputs. Just like other Shiny-based tools, it does require a server like Posit Connect or shinyapps.io. But for many cases, this gives you the best of both worlds,  a modern, flexible dashboard that can react to users in real time.
+:::
+
+## Is Traditional Shiny Right for You? {.smaller}
+
+::::{.columns}
+
+::: {.column}
+
+✅ Good Option If...
+
+* You need full interactivity with dropdowns, sliders, text inputs, and dynamic outputs.
+* Your app requires persistent storage.
+* You require session-based interactions or user authentication.
+* You want full control over the layout and design of your app.
+* Your data must be processed dynamically, not precomputed.
+
+:::
+
+::: {.column}
+
+🚫 Avoid If...
+
+* You only need a static or lightly interactive dashboard.
+* You do not have a way to deploy to a server.
+* You need a document-style report with occasional interactive elements.
+
+:::
+
+::::
+
+::: notes
+Now let’s talk about when Traditional Shiny is a good fit.
+
+It’s a great option if you need full interactivity with elements like dropdowns, sliders, text inputs, and dynamic outputs. If your app requires persistent storage, like saving user inputs or session data, Traditional Shiny has you covered. It’s also perfect if you need session-based interactions or user authentication, which is often required in secure environments. Plus, if you want full control over the layout and design of your app, down to the finest details, Shiny gives you that flexibility. And lastly, if your data needs to be processed dynamically instead of precomputed, Traditional Shiny is the tool for the job.
+
+But it’s not always the right fit. If you’re only looking for a static or lightly interactive dashboard, Traditional Shiny might be overkill. As you might expect, you will also need a server for this route.
+:::
+
+## Is Shinylive Right for You? {.smaller}
+
+::::{.columns}
+
+::: {.column}
+
+✅ Good Option If...
+
+* You need Shiny-like interactivity but don’t want to host a server.
+* You want a fully client-side app embedded in a website or report.
+* You have a way to host or share HTML files easily (GitHub,  Netlify, etc.).
+
+:::
+
+::: {.column}
+
+🚫 Avoid If...
+
+* You need quick start up times.
+* You need to connect directly with a database (might be [doable but tricky](https://github.com/posit-dev/r-shinylive/issues/55)).
+* Your dashboard requires persistent data storage beyond local browser state.
+* You have large datasets that exceed what can be loaded in the browser.
+* Your data is sensitive and cannot be shared on the client side.
+* You want to use an R or Python package that is not available.
+
+:::
+::::
+
+::: notes
+Now, let’s talk about Shinylive. This is a great option if you want Shiny-like interactivity but don’t want to manage a server. If your dashboard can run fully client-side and you need it embedded in a report or a website, Shinylive might be the solution for you. It’s perfect if you’re able to share or host HTML files. However, there are a few cases where you might want to consider other options. If your dashboard requires persistent data storage beyond what’s temporarily available in the browser, or if you have large datasets that can’t be loaded entirely on the client side, this is not the tool for you. Also, if your data is sensitive and cannot be exposed on the client side, you’ll want to look for an on-prem server-based option instead. There are no secrets with a Shinylive app.
+:::
+
+# Route selection {background-image="images/transition.png"}
+
+::: notes
+Now, we’ve talked about the theoretical aspects of choosing the right tool. To bring everything together, I’m going to share a few of my own projects and show how I made the decisions about which dastshboarding tool to use. These examples should help you see how the planning questions we discussed earlier translate into real-world scenarios.
+:::
+
+## Example 1: R-Ladies Video Feed {.smaller}
+
+::::{.columns}
+
+::: {.column}
+![](images/example1.png)
+:::
+
+::: {.column}
+* Purpose: Display a searchable table of R-Ladies YouTube talks
+* Audience: General public
+* Data Source: Public YouTube metadata
+* Update Frequency: Weekly, via GitHub Actions
+* Hosting: GitHub Pages (free, static HTML)
+* Interactivity: Client-side filtering with the {DT} package (no Shiny needed)
+:::
+
+::::
+
+::: aside
+Dashboard link: [ivelasq.github.io/rladies-video-feed](https://ivelasq.github.io/rladies-video-feed)
+
+Walkthrough: [ivelasq.rbind.io/blog/automated-youtube-dashboard](https://ivelasq.rbind.io/blog/automated-youtube-dashboard)
+:::
+
+::: notes
+My first example is a dashboard I built in 2023 to display R-Ladies talks from various YouTube channels all in one place. Since the data is public and available on YouTube, there were no authentication requirements, and I could store it anywhere. As it was a personal project, I also wanted to keep the hosting cost-free. GitHub Pages seemed like a perfect fit for hosting the HTML output. To keep the data updated, I set up a GitHub Action to automate the refresh every week. I wanted to offer users the ability to filter and sort the table, and with the DT package, I could easily add that functionality without the need for reactivity. All of this made Flexdashboard (No Shiny) the ideal choice for the project: simple, static, and effective. You might be wondering, why not use a Quarto dashboard without Shiny? Well, the reason is simple, Quarto dashboards weren’t available at the time! They were introduced in version 1.4, so I didn't have that option when I built the dashboard. I could update it to Quarto, but since it works so well, I don't have a pressing need. However, the same project could have been done with Quarto.
+:::
+
+## Example 2: Conference Workshop Registration Tracker {.smaller}
+
+::::{.columns}
+
+::: {.column}
+![](images/example2.png)
+:::
+
+::: {.column}
+* Purpose: Show workshop registration trends over time
+* Audience: Conference planning committee
+* Data Source: Private registration data (via API)
+* Update Frequency: Daily, using {pins}
+* Hosting: Posit Connect (secure, internal access)
+* Interactivity: Reactive filtering to explore individual workshops
+:::
+
+::::
+
+::: aside
+Dashboard link: [github.com/ivelasq/shinyconf2025/examples/quarto-with-shiny.qmd](https://github.com/ivelasq/shinyconf2025/examples/quarto-with-shiny.qmd)
+:::
+
+::: notes
+This next example is a Quarto dashboard that showed how registrations for conference workshops changed over time. The example on the slide uses dummy data. In the actual project, I wanted to track registration growth daily. So, I set up a Quarto document that pulled new data each day through the registration platform’s API, saved it as a pin, and then used that pin to power the Quarto dashboard. Since I had access to Posit Connect, I could host and schedule both the pin and the dashboard there. That let me add reactivity, so I could, for example, recalculate the graph based on which workshop I wanted to view. And because it was all hosted on Posit Connect, the data stayed secure behind my company’s firewall. For this project, I went with a Quarto dashboard because the layout was simple, just a sidebar, two pages, and two Plotly graphs. I originally thought I could keep it static, but I realized I needed reactivity so users could interact with the charts. That meant I had to add Shiny. A full Shiny app felt like overkill for something this lightweight, so using Shiny inside a Quarto dashboard gave me the right balance, simple layout, with just enough reactivity. But, for someone else, I imagine a Shiny app would have been just as easy of a choice.
+:::
+
+## Example 3: Content Calendar {.smaller}
+
+::::{.columns}
+
+::: {.column}
+![](images/example3.png)
+:::
+
+::: {.column}
+* Purpose: Show upcoming events in a calendar view
+* Audience: Social Media Committee
+* Data Source: Private scheduling data (via API)
+* Update Frequency: Daily refresh using {pins}
+* Hosting: Posit Connect (secure, internal only)
+* Interactivity: Reactive calendar with {toastui} htmlwidgets
+:::
+
+::::
+
+::: aside
+Walkthrough: [YouTube](https://www.youtube.com/watch?v=u2OK8IWJWhk&list=PL9HYL-VRX0oRsUB5AgNMQuKuHPpNDLBVt&index=8)
+:::
+
+::: notes
+Next is a Shiny app that displays a calendar using the {toastui} package. I used a Quarto document to pull data from multiple APIs, clean it, and store it in a pin. While a database could also be used here, I’ve stuck with pins because that’s what I’m most comfortable with. I would say that would not have changed my dashboarding tool choice. I wanted the calendar to stay updated daily. Unlike the previous Quarto dashboard example, where I had to schedule the document to re-run, Shiny can reactively update when the underlying data changes without needing a schedule. I hosted both the pin and the app on Posit Connect, which was important because the data is sensitive. And since I’m using htmlwidgets, I needed full Shiny functionality to power the interactivity. Therefore, Shiny was the clear option here.
+:::
+
+# Parting thoughts {background-image="images/transition.png"}
+
+## Key Takeaways
+
+* There’s no one-size-fits-all solution.
+* Reactivity, complexity, and hosting should all be weighed carefully when selecting your tool.
+* Consider trade-offs like scalability, security, and future maintenance when making your decision.
+
+::: notes
+As we close, remember that the tool you choose will have a big impact on your dashboard’s functionality, scalability, and maintenance. There’s no ‘perfect’ tool, just the one that fits best with your needs. 
+:::
+
+## Recommendations
+
+* Revisit your planning questions: Does your chosen tool meet all your needs, or are there trade-offs you should reconsider?
+* Test and iterate: Start small with a prototype and see how it performs before fully committing.
+* Stay flexible: Your project’s needs may evolve, and so may the tools.
+
+::: notes
+Take the time to test and iterate, and don’t be afraid to adjust your approach as your project grows.
+:::
+
+# Thank you! {background-image="images/transition.png"}
+
+<center>
+
+<img src="images/profile.jpg" style="border-radius: 50%;" width="250px"/>
+
+[{{< fa brands github >}} \@ivelasq](https://github.com/ivelasq)
+
+[{{< fa brands twitter >}} \@ivelasq3](https://twitter.com/ivelasq3)
+
+[{{< fa brands mastodon >}} \@ivelasq3](https://fosstodon.org/@ivelasq3)
+
+[{{< fa link >}} ivelasq.rbind.io](https://ivelasq.rbind.io)
+
+</center>
+
+::: notes
+Thank you all for your time! If there's the opportunity for questions, I'd be happy to answer them. If I don’t have the answer right now, I’ll find someone who does and get back to you. And if you have a specific use case you'd like to brainstorm, feel free to reach out to me on social media.
+:::
+
+## Acknowledgements {.smaller}
+
+Thanks to all who provided input:
+
+* Carlos Scheidegger
+* Coulter
+* Daniel Chen
+* Dana Alsaialy
+* George
+* Sara Altman
+* Randy Zwitch
+* Yuri Kim

@@ -1,0 +1,155 @@
+---
+title: "Tech Conference Workshop Attendance"
+author: "Data Team"
+server: shiny
+format: 
+  dashboard:
+    theme: 
+      - litera
+---
+
+```{r}
+#| label: setup
+#| include: false
+library(dplyr)
+library(purrr)
+library(stringr)
+library(ggplot2)
+library(janitor)
+library(shiny)
+library(plotly)
+library(lubridate)
+
+# Create dummy data instead of reading files
+set.seed(123)
+
+# Function to create dummy workshop data
+create_dummy_data <- function() {
+  # Workshop titles
+  workshop_titles <- c(
+    "Introduction to Machine Learning", 
+    "Data Visualization Masterclass", 
+    "Web Development with React", 
+    "Cloud Computing Essentials",
+    "Python for Data Science", 
+    "Database Design and SQL",
+    "DevOps and CI/CD Pipelines",
+    "Mobile App Development"
+  )
+  
+  # Generate dates (last 45 days)
+  dates <- seq(Sys.Date() - 45, Sys.Date(), by = "day")
+  
+  # Create empty dataframe to store results
+  dummy_data <- data.frame()
+  
+  # For each workshop, create attendance data over time
+  for (workshop in workshop_titles) {
+    # Starting attendance (random between 5 and 25)
+    start_attendance <- sample(5:25, 1)
+    
+    # Max capacity (random between 50 and 80)
+    max_capacity <- sample(50:80, 1)
+    
+    # Growth pattern (logistic growth)
+    attendance <- c()
+    for (i in 1:length(dates)) {
+      # Logistic growth with some randomness
+      growth_factor <- 0.08 + runif(1, -0.02, 0.02)
+      progress <- i / length(dates)
+      
+      # Base value with logistic growth
+      base_value <- start_attendance + (max_capacity - start_attendance) * 
+                    (1 / (1 + exp(-10 * (progress - 0.5))))
+      
+      # Add some noise for realism
+      attendance_value <- round(base_value + runif(1, -3, 3))
+      
+      # Ensure value stays within logical bounds
+      attendance_value <- max(0, min(attendance_value, max_capacity))
+      
+      attendance <- c(attendance, attendance_value)
+    }
+    
+    # Create workshop's dataframe
+    workshop_df <- data.frame(
+      date = dates,
+      workshop_name = workshop,
+      participants_count = attendance,
+      max_seats = max_capacity,
+      remaining_seats = max_capacity - attendance,
+      wait_list = ifelse(attendance > max_capacity * 0.85, 
+                         round(runif(length(dates), 0, 8)), 0)
+    )
+    
+    # Append to main dummy data
+    dummy_df <- bind_rows(dummy_data, workshop_df)
+  }
+  
+  return(dummy_df)
+}
+
+# Generate our dummy dataset
+dummy_workshop_data <- create_dummy_data()
+```
+
+# {.sidebar}
+
+```{r}
+selectInput(
+    "sessionInput",
+    "Choose a Workshop:",
+    choices = unique(dummy_workshop_data$workshop_name)
+  )
+```
+
+# Individual workshop
+
+```{r}
+plotlyOutput('workshop_attendance_plot')
+```
+
+```{r}
+#| context: server
+
+filtered_session <- reactive({
+   dummy_workshop_data |>
+      filter(workshop_name == input$sessionInput)
+})
+ 
+output$workshop_attendance_plot <- renderPlotly({
+  
+  p1 <- ggplot(filtered_session(), aes(x = date, y = participants_count)) +
+    geom_line(linewidth = 1, color = "#2c3e50") +
+    geom_point(color = "#3498db", size = 2) +
+    theme_minimal() +
+    labs(title = "Workshop registrations over time",
+         y = "Participants") +
+    theme(axis.title.x = element_blank()) +
+    scale_y_continuous(name = "Count", limits = c(0, 80))
+  
+    ggplotly(p1)
+  
+  })
+
+output$all_sessions_plot <- renderPlotly({
+  
+  p <- ggplot(dummy_workshop_data, aes(x = date, y = participants_count, color = workshop_name)) +
+    geom_line() +
+    theme_minimal() +
+    labs(title = "Workshop registrations over time",
+         y = "Participants") +
+    theme(axis.title.x = element_blank(),
+          legend.title = element_blank()) +
+    scale_y_continuous(name = "Count", limits = c(0, 80))
+  
+  ggplotly(p)
+  
+  })
+```
+
+# All workshops
+
+```{r}
+plotlyOutput('all_sessions_plot')
+```
