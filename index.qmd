@@ -56,10 +56,15 @@ Hi everyone, thanks for joining me today. I’m Isabella Velásquez, and I work 
 
 ## Motivation
 
-![](images/motivation.jpg){fig-align="center"}
+![](images/motivation1.png){fig-align="center" width=90%}
 
 ::: notes
 In my previous role as a data analyst, I spent a lot of time thinking about how to choose the right tool when creating a dashboard. Why choose this tool over another? How can I make sure I don’t get halfway through a project only to realize I can’t share it the way I want?
+:::
+
+
+::: aside
+Child playing with train toys from Verses For Grannies, illustrated by Dorothea A.H Drew (1899). Original from the British Library.
 :::
 
 ## Motivation {background-image="images/motivation.png"}
@@ -275,7 +280,12 @@ If you answered no to any of the reactivity questions, there are some less clear
 
 Even if a track looks right, proceed with caution!
 
-![](images/gap.jpg){fig-align="center" fig-width=80%}
+![](images/gap.jpg){fig-align="center" width=70%}
+
+
+::: aside
+We Stopped Here (1915) by Alfred Stanley Johnson
+:::
 
 ::: notes
 Sometimes your needs seem to point straight to a tool. For example, you want reactivity but don’t have a server? Shinylive sounds perfect. But just like hopping on the express train, it’s worth double-checking the stops. Just because you can build a dashboard with a tool doesn’t mean you should. Shinylive runs entirely in the browser, which is amazing, but there are tradeoffs. You’re limited by file size, can’t store sensitive information, and heavier processing becomes tricky. Likewise, if your data is protected, say, under HIPAA, you might consider hosting a Shiny app on a cloud platform like shinyapps.io. Technically, it works. But that means your data lives on someone else’s servers, which may not meet your org’s security or compliance standards. So even when a tool seems to check all the technical boxes, pause and ask:  Will this choice actually get me where I need to go, safely and responsibly?
@@ -654,6 +664,8 @@ Thanks to all who provided input:
 * Sara Altman
 * Randy Zwitch
 * Yuri Kim
+
+Images provided by [RawPixel](https://www.rawpixel.com/)
 
 ## Deployment of reactive dashboards {.smaller}
 
